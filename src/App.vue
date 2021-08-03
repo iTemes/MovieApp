@@ -60,9 +60,8 @@ export default {
       this.$router.push({ query: { page } });
     },
     onPageQueryChange({ page = 1 }) {
-      console.log('handleWaTch');
       this.changeCurrentPage(Number(page));
-    },
+    }
   }
 };
 </script>
