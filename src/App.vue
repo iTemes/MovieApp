@@ -1,0 +1,74 @@
+<template>
+  <div id="app">
+    <Loader />
+    <Notification />
+    <PosterBg :poster="posterBg" />
+    <Header />
+    <MoviesList :list="moviesList" @changePoster="onChangePoster" />
+    <MoviesPagination
+      :current-page="currentPage"
+      :per-page="moviesPerPage"
+      :total="moviesLength"
+      @pageChanged="onPageChanged"
+    />
+  </div>
+</template>
+
+<script>
+import { mapActions, mapGetters } from "vuex";
+import MoviesList from "@/components/MoviesList";
+import PosterBg from "@/components/PosterBg";
+import MoviesPagination from "@/components/MoviesPagination";
+import Loader from "@/components/Loader";
+import Header from "@/components/Header";
+import Notification from "@/components/Notification";
+
+export default {
+  name: "app",
+  components: {
+    MoviesList,
+    PosterBg,
+    MoviesPagination,
+    Loader,
+    Header,
+    Notification
+  },
+  data: () => ({
+    posterBg: ""
+  }),
+  computed: {
+    ...mapGetters("movies", [
+      "moviesList",
+      "currentPage",
+      "moviesPerPage",
+      "moviesLength"
+    ])
+  },
+  watch: {
+    "$route.query": {
+      handler: "onPageQueryChange",
+      immediate: true,
+      deep: true
+    }
+  },
+  methods: {
+    ...mapActions("movies", ["changeCurrentPage"]),
+    onChangePoster(poster) {
+      this.posterBg = poster;
+    },
+    onPageChanged(page) {
+      this.$router.push({ query: { page } });
+    },
+    onPageQueryChange({ page = 1 }) {
+      console.log('handleWaTch');
+      this.changeCurrentPage(Number(page));
+    },
+  }
+};
+</script>
+
+<style>
+body {
+  position: relative;
+}
+</style>
